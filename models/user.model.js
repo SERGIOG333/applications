@@ -1,30 +1,34 @@
 import { connect } from '../config/db/connectMysql.js';
 
 class UserModel {  
-static async create({ userName,email,password,status}) {
-     try {
-      let sqlQuery = "INSERT INTO user (username,email,password_hash,status_id) VALUES (?,?,?,?);";
-      const [result] = await connect.query(sqlQuery,[userName,email,password,status]);
-      return result.insertId;
-    } catch (error) {
-      return [0];
-    }
-  }
+
+static async create({ username, email, passwordHash, statusId}) {
+  const [result]= await connect.query(
+    'INSERT INTO User (username, email, password_hast, status_id) VALUES (?, ?, ?, ?)',
+    [username, email, passwordHash, statusId]
+  );
+  return result.insertId;
+}
 
   static async show() {
-    try {
-      let sqlQuery = "SELECT * FROM `user` ORDER BY `id`";
-      const [result] = await connect.query(sqlQuery);
-      return result;
-    } catch (error) {
-      return [0];
-    }
+    const [rows] = await connect.query(
+      'SELECT * FROM user ORDEN BY id'
+    );
+    return rows[0];
   }
 
-  static async update(id, { userName,email,password,status }) {
+  static async showActive(){
+    const [rows] = await connect.query(
+      'CSLL sp_show-user-active()'
+    );
+    return rows[0];
+
+  }
+
+  static async update(id, { username,email,password,status }) {
     try {
       let sqlQuery = "UPDATE user SET username = ?,email= ?,password_hash =?, status_id=?, updated_at = CURRENT_TIMESTAMP WHERE id =?;";
-      const [result] = await connect.query(sqlQuery, [userName,email,password,status, id]);
+      const [result] = await connect.query(sqlQuery, [username,email,password,status, id]);
       if (result.affectedRows === 0) {
         return [0];
       } else {
@@ -37,29 +41,52 @@ static async create({ userName,email,password,status}) {
   }
 
   static async delete(id) {
-    try {
-      let sqlQuery = "DELETE FROM user WHERE id=?";
-      const [result] = await connect.query(sqlQuery, id);
-      if (result.affectedRows === 0) {
-        return [0];
-      } else {
-        return result.affectedRows
-      }
-    } catch (error) {
-      return [0];
-    }
+    const [result] = await connect.query(
+      'DELETE FROM user WHERE id = ?',
+      [id]
+    );
+    return result.affectedRows > 0 ? this.findById(id) : null;
   }
 
   static async findById(id) {
-    try {
-      let sqlQuery = 'SELECT * FROM `user` WHERE `id`= ?';
-      const [result] = await connect.query(sqlQuery, id);
-      return result;
-    } catch (error) {
-      return [0];
-    }
+    const [rows] = await connect.query(
+      'SELECT * FROM user WHERE id = ?',
+      [id]
+    );
+    return rows[0];
 
   }
+
+  static async findByIdActive(id) {
+    const [rows]= await connect.query(
+      'CALL sp_show_id_user_active(?)',
+      [id]
+    );
+    return rows[0];
+
+  }
+
+
+ static async findByName(username) {
+  const [rows] = await connect.query(
+    'SELECT * FROM user WHERE username = ?',
+    [username]
+  );
+  return rows[0];
+
+  }
+
+  static async updateLogin (id) {
+   
+    const [result] = await connect.query(
+      'UPDATE user SET last_login = CURRENT_TIMESTAMP WHERE id = ?',
+      [id]
+    );
+    return result.affectedRows > 0 ? this.findById(id) : null;
+  }
+
+
 }
+
 
 export default UserModel;
