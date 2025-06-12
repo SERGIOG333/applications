@@ -4,7 +4,7 @@ class UserModel {
 
 static async create({ username, email, passwordHash, statusId}) {
   const [result]= await connect.query(
-    'INSERT INTO User (username, email, password_hast, status_id) VALUES (?, ?, ?, ?)',
+    'INSERT INTO User (username, email, password_hash, status_id) VALUES (?, ?, ?, ?)',
     [username, email, passwordHash, statusId]
   );
   return result.insertId;

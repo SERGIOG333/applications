@@ -1,5 +1,5 @@
 import DocumentTypeModel from '../models/documentType.model.js';
-
+//creacion de tipo de documento
 class DocumentTypeController {
 
   async register(req, res) {
@@ -9,6 +9,7 @@ class DocumentTypeController {
       if (!name || !description ) {
         return res.status(400).json({ error: 'Required fields are missing' });
       }
+      
       // Create the new document type
       const DocumentTypeModelId = await DocumentTypeModel.create({
         name,
@@ -23,6 +24,7 @@ class DocumentTypeController {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+  //mostrar documentos
 
   async show(req, res) {
     try {
@@ -31,7 +33,7 @@ class DocumentTypeController {
       if (!existingDocumentTypeModel) {
         return res.status(409).json({ error: 'The document type no already exists' });
       }
-      res.status(201).json({ 
+      res.status(200).json({ 
         message: 'Document type successfully',
         data:existingDocumentTypeModel 
       });

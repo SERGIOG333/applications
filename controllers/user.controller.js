@@ -49,7 +49,7 @@ dotenv.config();
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }
-
+////mostrar usuarios
 
   async show(req, res) {
     try {
@@ -67,7 +67,9 @@ dotenv.config();
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }
-  
+  //metodo actualizar 
+  // hace falta que cuando actualize la clave se hash en la base de datos 
+  //por que cuando se actualiza no se hash la clave en la base de datos  
   async update(req, res) {
     try {
       const {  username,email,password,status} = req.body;

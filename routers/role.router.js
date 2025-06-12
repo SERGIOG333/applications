@@ -1,12 +1,19 @@
 import { Router } from "express";
 import RoleController from '../controllers/role.controller.js';
+import { verifyToken } from '../middleware/authMiddleware.js';
 const router= Router();
 const name='/role';
 // Public route
-router.post(name, RoleController.register);
-router.get(name+'/',RoleController.show);
-router.get(name+'/:id',RoleController.findById);
-router.put(name+'/:id', RoleController.update);
-router.delete(name+'/:id',RoleController.delete);
+
+router.route(name)
+.post(RoleController.register)
+.get(verifyToken,RoleController.show);
+
+
+router.route(`${name}/:id`)
+
+ .get(RoleController.findById)
+ .put(RoleController.update)
+ .delete(RoleController.delete);
 
 export default router;

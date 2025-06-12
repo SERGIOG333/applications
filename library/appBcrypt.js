@@ -1,16 +1,18 @@
 
-import appBcrypt from 'bcryptjs';
+import appBcrypt from 'bcrypt';
 const saltRounds = 10;
 
 // metodo para encriptar la contraseña
 export const encryptPassword = async (password) => {
     try {
-        const hastedPassword = await appBcrypt.hash(password, saltRounds);
+        const hashedPassword = await appBcrypt.hash(password, saltRounds);
         return hashedPassword;
 } catch (error) {
         console.error('Error encrypt:', error);
         throw error;
     }
+
+
 };
 
 //encargado de validar el hash
